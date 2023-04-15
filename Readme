@@ -1,0 +1,56 @@
+mkdir myapp
+cd myapp
+
+Create a file app.js and add the below
+------------------------------------
+const http = require('http');
+
+const hostname = '0.0.0.0';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World\n');
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+--------------------------------------------
+
+This code sets up a basic HTTP server that listens on port 3000 and responds with "Hello World" when accessed.
+
+Next, create a new file called Dockerfile and add the following code:
+
+---------------------------------------------------
+FROM node:14-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD [ "node", "app.js" ]
+-------------------------------------------------------
+
+This code defines a Docker image that is based on the official Node.js 14 Alpine image, sets the working directory to /app, copies the package.json and package-lock.json files to the working directory and runs npm install to install the dependencies. It then copies the rest of the application files to the working directory, exposes port 3000, and sets the command to run the app.js file.
+
+Finally, build the Docker image by running the following command:
+
+
+---------------------------------
+200~docker build -t myapp .
+-----------------------------------
+
+
+
+This command builds a Docker image named myapp using the Dockerfile in the current directory.
+
+To run the container, use the following command:
+
+--------------------------------------
+docker run -p 3000:3000 myapp
+-------------------------------------
+This command starts a container using the myapp image and maps port 3000 in the container to port 3000 on the host machine. You should be able to access the application by opening a web browser and navigating to http://localhost:3000.
+
+
